@@ -1,18 +1,39 @@
 services:
   nginx:
-    image: nginx:stable
-    container_name: nginx
+    # Official Nginx image (stable Alpine for small size & security)
+    image: nginx:1.29-alpine
+    container_name: nginx-prod
+
+    # Automatically restart on crashes, but respect manual stops
+    restart: unless-stopped
+
     ports:
       - "80:80"
       - "443:443"
+
+    # Docker secrets for TLS (secure management)
+    secrets:
+      - cloudflare_origin_cert
+      - cloudflare_origin_key
+
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/certs:/etc/nginx/certs
+      # Mount custom Nginx config (read-only for safety)
+      - ./nginx/nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      # Persist Nginx logs on host for auditing and debugging
       - ./nginx/logs:/var/log/nginx
-    networks:
-      - web-networks
-    restart: unless-stopped
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
 
 networks:
   web-networks:
     external: true
+
+secrets:
+  cloudflare_origin_cert:
+    file: ./certs/cloudflare_origin.pem
+  cloudflare_origin_key:
+    file: ./certs/cloudflare_origin.key
