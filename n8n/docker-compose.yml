@@ -9,7 +9,8 @@ services:
       GENERIC_TIMEZONE: Asia/Tehran
       N8N_HOST: n8n.rusher.sbs
       N8N_PROTOCOL: https
-      WEBHOOK_URL: https://n8n.rusher.sbs/
+      WEBHOOK_URL: https://n8n.rusher.sbs
+      N8N_EDITOR_BASE_URL: https://n8n.rusher.sbs
       N8N_PORT: 5678
       N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
       N8N_RUNNERS_ENABLED: "true"
